@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jee="http://www.springframework.org/schema/jee" xmlns:task="http://www.springframework.org/schema/task"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:batch="http://www.springframework.org/schema/batch"
+	xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+
+	xsi:schemaLocation="http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd         
+	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd         
+	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd         
+	http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee.xsd         
+	http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd  
+	http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd
+	http://www.springframework.org/schema/batch http://www.springframework.org/schema/batch/spring-batch.xsd
+	http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa.xsd
+	">
+	
+	<context:property-placeholder location="classpath*:META-INF/spring/*.properties" />
+	
+	<jpa:repositories base-package="permnotifier.repositories" />
+	<context:component-scan base-package="permnotifier">
+		<context:exclude-filter expression="org.springframework.stereotype.Controller"
+			type="annotation" />
+	</context:component-scan>
+	
+	<bean class="org.apache.commons.dbcp.BasicDataSource"
+		destroy-method="close" id="dataSource">
+		<property name="driverClassName" value="${database.driverClassName}" />
+		<property name="url" value="${database.url}" />
+		<property name="username" value="${database.username}" />
+		<property name="password" value="${database.password}" />
+		<property name="testOnBorrow" value="true" />
+		<property name="testOnReturn" value="true" />
+		<property name="testWhileIdle" value="true" />
+		<property name="timeBetweenEvictionRunsMillis" value="1800000" />
+		<property name="numTestsPerEvictionRun" value="3" />
+		<property name="minEvictableIdleTimeMillis" value="1800000" />
+		<property name="validationQuery" value="SELECT 1" />
+	</bean>
+	<bean class="org.springframework.orm.jpa.JpaTransactionManager"
+		id="transactionManager">
+		<property name="entityManagerFactory" ref="entityManagerFactory" />
+	</bean>
+	<tx:annotation-driven transaction-manager="transactionManager" />
+	<bean
+		class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean"
+		id="entityManagerFactory">
+		<property name="persistenceUnitName" value="persistenceUnit" />
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	<bean class="org.springframework.mail.javamail.JavaMailSenderImpl"
+		id="mailSender">
+		<property name="host" value="${email.host}" />
+	</bean>
+
+	<task:executor id="asyncExecutor" pool-size="${executor.poolSize}" />
+	<bean class="org.apache.solr.client.solrj.impl.HttpSolrServer"
+		id="solrServer">
+		<constructor-arg value="${solr.serverUrl}" />
+	</bean>
+
+	<!-- batch jobs -->
+	<bean id="jobRepository"
+		class="org.springframework.batch.core.repository.support.MapJobRepositoryFactoryBean">
+	</bean>
+	<bean id="jobLauncher"
+		class="org.springframework.batch.core.launch.support.SimpleJobLauncher">
+		<property name="jobRepository" ref="jobRepository" />
+	</bean>
+
+	<batch:job id="dolJob">
+		<batch:step id="fetchData">
+			<batch:tasklet transaction-manager="transactionManager">
+				<batch:chunk reader="reader" processor="processor"
+					writer="writer" commit-interval="20" />
+			</batch:tasklet>
+		</batch:step>
+	</batch:job>
+
+
+	<bean id="processor" class="permnotifier.batch.DolItemProcessor"></bean>
+	<bean id="writer" class="permnotifier.batch.DolItemWriter"></bean>
+	<bean id="reader" class="permnotifier.batch.DolItemReader" scope="step">
+		<property name="pageSize" value="20" />
+	</bean>
+</beans>

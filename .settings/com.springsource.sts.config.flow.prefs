@@ -1,0 +1,2 @@
+//com.springsource.sts.config.flow.coordinates\:http\://www.springframework.org/schema/batch\:/permnotifier/src/main/resources/META-INF/spring/applicationContext.xml=<?xml version\="1.0" encoding\="UTF-8"?>\n<graph>\n<element clazz\="JobModelElement" type\="job">\n<structure end\="3951" endstart\="3939" start\="3688" startend\="3711"/>\n<bounds height\="118" width\="106" x\="15" y\="17"/>\n</element>\n</graph>
+eclipse.preferences.version=1
