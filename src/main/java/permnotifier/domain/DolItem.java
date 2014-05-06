@@ -16,7 +16,7 @@ public class DolItem extends AbstractModel{
 
 	private static final long serialVersionUID = 1151604782989545072L;
 
-	@Column(name = "case_id", unique = true)
+	@Column(name = "case_id", nullable = true)
 	private int caseId;
 	
 	@Column(name = "case_number", unique = true)
