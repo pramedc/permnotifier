@@ -27,9 +27,9 @@ public class DataLoader {
     	
     	MutableDateTime startDateTime = new MutableDateTime();
     	startDateTime.setMonthOfYear(2);
-    	startDateTime.setDayOfMonth(3);
+    	startDateTime.setDayOfMonth(7);
     	
-    	for(int i = 0; i <= 1; i++) {
+    	for(int i = 0; i <= 3; i++) {
 			startDateTime.addDays(1);
     		JobParametersBuilder builder = new JobParametersBuilder();
 	        builder.addDate("startDate", startDateTime.toDate());

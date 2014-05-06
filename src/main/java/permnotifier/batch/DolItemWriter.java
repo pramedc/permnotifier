@@ -29,6 +29,10 @@ public class DolItemWriter implements ItemWriter<DolItem> {
 			document.addField("state_s", input.getState());
 			document.addField("postingDate_dt", input.getJobPostingDate());
 			document.addField("jobTitle_s", input.getJobTitle());
+			document.addField("prevailingWage_c", input.getPrevailingWage());
+			document.addField("offerLow_c", input.getOfferLow());
+			document.addField("offerHigh_c", input.getOfferHigh());
+			document.addField("countryOfOrigin_s", input.getCountryOfOrigin());
 			return document;
 		}
 	}

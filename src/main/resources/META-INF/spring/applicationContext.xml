@@ -3,9 +3,7 @@
 	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:jee="http://www.springframework.org/schema/jee" xmlns:task="http://www.springframework.org/schema/task"
 	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:batch="http://www.springframework.org/schema/batch"
-	xmlns:jpa="http://www.springframework.org/schema/data/jpa"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-
+	xmlns:jpa="http://www.springframework.org/schema/data/jpa" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd         
 	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd         
 	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd         
@@ -78,10 +76,10 @@
 		</batch:step>
 	</batch:job>
 
-
 	<bean id="processor" class="permnotifier.batch.DolItemProcessor"></bean>
 	<bean id="writer" class="permnotifier.batch.DolItemWriter"></bean>
 	<bean id="reader" class="permnotifier.batch.DolItemReader" scope="step">
 		<property name="pageSize" value="20" />
 	</bean>
+	
 </beans>

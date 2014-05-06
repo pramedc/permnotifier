@@ -15,7 +15,7 @@
 		<slf4j.version>1.7.5</slf4j.version>
 		<spring.version>4.0.4.RELEASE</spring.version>
 	</properties>
-	<repositories>
+	<repositories> 
 		<repository>
 			<id>spring-maven-release</id>
 			<name>Spring Maven Release Repository</name>
