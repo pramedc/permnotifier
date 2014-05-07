@@ -3,7 +3,7 @@ package permnotifier.batch.vo;
 import java.util.Arrays;
 import java.util.List;
 
-import permnotifier.domain.DolItem;
+import permnotifier.domain.PermRecord;
 
 
 public class DolData {
@@ -11,7 +11,7 @@ public class DolData {
 	private int page;
 	private int records;
 	private int total;
-	private DolItem[] rows;
+	private PermRecord[] rows;
 	
 	public int getPage() {
 		return page;
@@ -37,15 +37,15 @@ public class DolData {
 		this.total = total;
 	}
 
-	public DolItem[] getRows() {
+	public PermRecord[] getRows() {
 		return rows;
 	}
 	
-	public List<DolItem> getItems() {
+	public List<PermRecord> getItems() {
 		return Arrays.asList(rows);
 	}
 
-	public void setRows(DolItem[] rows) {
+	public void setRows(PermRecord[] rows) {
 		this.rows = rows;
 	}
 	

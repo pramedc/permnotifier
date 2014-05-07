@@ -25,7 +25,7 @@ import org.springframework.http.converter.HttpMessageNotWritableException;
 import org.springframework.web.client.RestTemplate;
 
 import permnotifier.batch.vo.DolData;
-import permnotifier.domain.DolItem;
+import permnotifier.domain.PermRecord;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -35,7 +35,7 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 
-public class DolItemReader extends AbstractPagingItemReader<DolItem> {
+public class DolItemReader extends AbstractPagingItemReader<PermRecord> {
 
 	@Value("#{jobParameters['startDate']}")
 	private Date startDate;
@@ -69,7 +69,7 @@ public class DolItemReader extends AbstractPagingItemReader<DolItem> {
 		System.out.println("Getting date for url: " + formattedUrl);
 		DolData object = restTemplate.getForObject(formattedUrl, DolData.class);
 		if (results == null) {
-			results = new CopyOnWriteArrayList<DolItem>();
+			results = new CopyOnWriteArrayList<PermRecord>();
 		} else {
 			results.clear();
 		}
@@ -89,7 +89,7 @@ public class DolItemReader extends AbstractPagingItemReader<DolItem> {
 	private static class DolDataMessageConverter implements
 			HttpMessageConverter<DolData> {
 
-		Gson gson = new GsonBuilder().registerTypeAdapter(DolItem.class,
+		Gson gson = new GsonBuilder().registerTypeAdapter(PermRecord.class,
 				new DolItemDeserializer()).create();
 
 		@Override
@@ -126,34 +126,34 @@ public class DolItemReader extends AbstractPagingItemReader<DolItem> {
 	}
 
 	private static class DolItemDeserializer implements
-			JsonDeserializer<DolItem> {
+			JsonDeserializer<PermRecord> {
 
 		private DateTimeFormatter formatter = DateTimeFormat
 				.forPattern("MM/dd/YYYY");
 
 		@Override
-		public DolItem deserialize(JsonElement element, Type type,
+		public PermRecord deserialize(JsonElement element, Type type,
 				JsonDeserializationContext context) throws JsonParseException {
 			if (element.isJsonArray()) {
 				JsonArray arr = (JsonArray) element;
-				final DolItem dolItem = new DolItem();
-				dolItem.setCaseId(arr.get(0).getAsInt());
-				dolItem.setCaseNumber(arr.get(1).getAsString());
-				dolItem.setJobPostingDate(formatter.parseDateTime(
+				final PermRecord permRecord = new PermRecord();
+				permRecord.setCaseId(arr.get(0).getAsInt());
+				permRecord.setCaseNumber(arr.get(1).getAsString());
+				permRecord.setJobPostingDate(formatter.parseDateTime(
 						arr.get(2).getAsString()).toDate());
-				dolItem.setCaseType(arr.get(3).getAsString());
-				dolItem.setStatus(arr.get(4).getAsString());
-				dolItem.setEmployer(StringUtils.upperCase(arr.get(5)
+				permRecord.setCaseType(arr.get(3).getAsString());
+				permRecord.setStatus(arr.get(4).getAsString());
+				permRecord.setEmployer(StringUtils.upperCase(arr.get(5)
 						.getAsString()));
-				dolItem.setWorkStartDate(formatter.parseDateTime(
+				permRecord.setWorkStartDate(formatter.parseDateTime(
 						arr.get(6).getAsString()).toDate());
-				dolItem.setWorkEndDate(formatter.parseDateTime(
+				permRecord.setWorkEndDate(formatter.parseDateTime(
 						arr.get(7).getAsString()).toDate());
-				dolItem.setJobTitle(StringUtils.upperCase(arr.get(8)
+				permRecord.setJobTitle(StringUtils.upperCase(arr.get(8)
 						.getAsString()));
-				dolItem.setState(StringUtils
+				permRecord.setState(StringUtils
 						.upperCase(arr.get(9).getAsString()));
-				return dolItem;
+				return permRecord;
 			}
 			return null;
 		}

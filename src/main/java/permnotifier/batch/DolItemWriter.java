@@ -1,5 +1,6 @@
 package permnotifier.batch;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -7,32 +8,34 @@ import org.apache.solr.common.SolrInputDocument;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import permnotifier.domain.PermRecord;
+import permnotifier.domain.WorkInformation;
+import permnotifier.repositories.DolItemRepository;
+import permnotifier.search.SolrService;
+
 import com.google.common.base.Function;
 import com.google.common.base.Predicates;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.Lists;
 
-import permnotifier.domain.DolItem;
-import permnotifier.repositories.DolItemRepository;
-import permnotifier.search.SolrService;
+public class DolItemWriter implements ItemWriter<PermRecord> {
 
-public class DolItemWriter implements ItemWriter<DolItem> {
-
-	private static final class FunctionImplementation implements
-			Function<DolItem, SolrInputDocument> {
+	private static final class WorkInformationFunction<T extends WorkInformation> implements
+			Function<T, SolrInputDocument> {
 		@Override
-		public SolrInputDocument apply(DolItem input) {
+		public SolrInputDocument apply(T input) {
 			SolrInputDocument document = new SolrInputDocument();
-			document.addField("caseNumber_s", input.getCaseNumber());
 			document.addField("employer_s", input.getEmployer());
 			document.addField("city_s", input.getCity());
 			document.addField("state_s", input.getState());
-			document.addField("postingDate_dt", input.getJobPostingDate());
+			document.addField("jobPostingDate_dt", input.getJobPostDate());
 			document.addField("jobTitle_s", input.getJobTitle());
-			document.addField("prevailingWage_c", input.getPrevailingWage());
-			document.addField("offerLow_c", input.getOfferLow());
-			document.addField("offerHigh_c", input.getOfferHigh());
-			document.addField("countryOfOrigin_s", input.getCountryOfOrigin());
+			document.addField("yearlySalary_c", input.getYearlySalary());
+			document.addField("monthlySalary_c", input.getMonthlySalary());
+			document.addField("biweeklySalary_c", input.getBiWeeklySalary());
+			document.addField("weeklySalary_c", input.getWeeklySalary());
+			document.addField("hourlySalary_c", input.getHourlySalary());
+			document.addField("jobLevel_s", input.getJobLevel());
 			return document;
 		}
 	}
@@ -43,14 +46,23 @@ public class DolItemWriter implements ItemWriter<DolItem> {
 	@Autowired SolrService solrService;
 	
 	@Override
-	public void write(List<? extends DolItem> items) throws Exception {
-		Collection<DolItem> nonNullList = Lists.newArrayList(Collections2.filter(items, Predicates.notNull()));
+	public void write(List<? extends PermRecord> items) throws Exception {
+		Collection<PermRecord> nonNullList = Lists.newArrayList(Collections2.filter(items, Predicates.notNull()));
+		List<PermRecord> permRecords = new ArrayList<>();
+		try {
+			for (PermRecord permRecord : nonNullList) {
+				PermRecord existing = dolItemRepository.findByCaseNumber(permRecord.getCaseNumber());
+				if(existing == null) {
+					dolItemRepository.save(permRecord);
+					permRecords.add(permRecord);
+				}
+			}
+		}
+		catch(Exception e2) {
+			// ignore
+		}
 		
-		// save first on database
-		Iterable<DolItem> savedItems = dolItemRepository.save(nonNullList);
-		
-		// then index data
-		solrService.indexItems(savedItems, new FunctionImplementation());
+		solrService.indexItems(permRecords, new WorkInformationFunction<PermRecord>());
 	}
 
 }

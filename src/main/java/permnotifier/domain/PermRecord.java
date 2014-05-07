@@ -5,14 +5,19 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import permnotifier.helpers.SalaryCalculator;
+
 @Entity
-public class DolItem extends AbstractModel{
+@Table(name = "perm_records")
+public class PermRecord extends AbstractModel implements WorkInformation {
 
 	private static final long serialVersionUID = 1151604782989545072L;
 
@@ -66,6 +71,8 @@ public class DolItem extends AbstractModel{
 	
 	@Column(name = "offer_high")
 	private BigDecimal offerHigh;
+	
+	private String offerSalaryType;
 	
 	@Column(name = "field_of_study")
 	private String fieldOfStudy;
@@ -141,7 +148,7 @@ public class DolItem extends AbstractModel{
 	}
 
 	public String getJobTitle() {
-		return jobTitle;
+		return jobTitle != null ? jobTitle : occupationTitle;
 	}
 
 	public void setJobTitle(String jobTitle) {
@@ -149,7 +156,8 @@ public class DolItem extends AbstractModel{
 	}
 
 	public String getState() {
-		return state;
+		USState stateValue = USState.getState(state);
+		return stateValue != null ? stateValue.getStateName() : null;
 	}
 
 	public void setState(String state) {
@@ -181,7 +189,7 @@ public class DolItem extends AbstractModel{
 	}
 
 	public String getCity() {
-		return city;
+		return StringUtils.upperCase(city);
 	}
 
 	public void setCity(String city) {
@@ -202,6 +210,14 @@ public class DolItem extends AbstractModel{
 
 	public void setOfferHigh(BigDecimal offerHigh) {
 		this.offerHigh = offerHigh;
+	}
+
+	public String getOfferSalaryType() {
+		return offerSalaryType;
+	}
+
+	public void setOfferSalaryType(String offerSalaryType) {
+		this.offerSalaryType = offerSalaryType;
 	}
 
 	public String getFieldOfStudy() {
@@ -226,6 +242,61 @@ public class DolItem extends AbstractModel{
 
 	public void setDetailsLoaded(boolean detailsLoaded) {
 		this.detailsLoaded = detailsLoaded;
+	}
+
+	/**
+	 * possible offer is always the highest
+	 * 
+	 * @return
+	 */
+	public BigDecimal getPossibleOffer() {
+		return offerHigh != null ? offerHigh : offerLow;
+	}
+	
+	public SalaryType getSalaryType() {
+		return SalaryType.getSalaryType(offerSalaryType);
+	}
+	
+	@Override
+	public String getJobLevel() {
+		return occupationLevel;
+	}
+
+	@Override
+	public Date getJobPostDate() {
+		return workStartDate;
+	}
+
+	@Override
+	public BigDecimal getYearlySalary() {
+		return isValid() ? SalaryCalculator.getYearlySalary(getSalaryType(), getPossibleOffer()) : null;
+	}
+
+	@Override
+	public BigDecimal getMonthlySalary() {
+		return isValid() ? SalaryCalculator.getMonthlySalary(getSalaryType(), getPossibleOffer()) : null;
+	}
+
+	@Override
+	public BigDecimal getWeeklySalary() {
+		return isValid() ? SalaryCalculator.getWeeklySalary(getSalaryType(), getPossibleOffer()) : null;
+	}
+
+	@Override
+	public BigDecimal getBiWeeklySalary() {
+		return isValid() ? SalaryCalculator.getBiWeeklySalary(getSalaryType(), getPossibleOffer()) : null;
+	}
+
+	@Override
+	public BigDecimal getHourlySalary() {
+		return isValid() ? SalaryCalculator.getHourlySalary(getSalaryType(), getPossibleOffer()) : null;
+	}
+
+	@Override
+	public boolean isValid() {
+		return getPossibleOffer() != null && getSalaryType() != null 
+				&& getCity() != null && getState() != null && getEmployer() != null
+				&& getJobTitle() != null;
 	}
 
 	public String toString() {

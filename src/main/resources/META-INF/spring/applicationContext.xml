@@ -86,12 +86,15 @@
 			<batch:tasklet transaction-manager="transactionManager">
 				<batch:chunk reader="multiResourceReader"
 					writer="writer" commit-interval="100" />
+					<batch:no-rollback-exception-classes>
+						<batch:include class="org.springframework.orm.jpa.JpaSystemException"/>
+						<batch:include class="org.hibernate.exception.ConstraintViolationException"/>
+					</batch:no-rollback-exception-classes>
 			</batch:tasklet>
 		</batch:step>
 	</batch:job>
 
-	<bean id="dolItem" class="permnotifier.domain.DolItem" scope="prototype" />
-
+	<bean id="permRecord" class="permnotifier.domain.PermRecord" scope="prototype" />
 	<bean id="multiResourceReader"
 		class="org.springframework.batch.item.file.MultiResourceItemReader">
 		<property name="resources" value="classpath:initialdata/*.csv" />
@@ -105,14 +108,13 @@
 				<property name="lineTokenizer">
 					<bean
 						class="org.springframework.batch.item.file.transform.DelimitedLineTokenizer">
-						<property name="names" value="caseNumber,jobPostingDate,status,employer,occupationTitle,jobTitle,occupationLevel,prevailingWage,offerLow,offerHigh,city,state,countryOfOrigin" />
-						<property name="includedFields" value="0,1,2,4,14,15,16,18,20,21,23,24,25" />
+						<property name="names" value="caseNumber,jobPostingDate,status,employer,occupationTitle,occupationLevel,offerLow,offerHigh,offerSalaryType,city,state,countryOfOrigin" />
 					</bean>
 				</property>
 				<property name="fieldSetMapper">
 					<bean
 						class="org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper">
-						<property name="prototypeBeanName" value="dolItem" />
+						<property name="prototypeBeanName" value="permRecord" />
 					</bean>
 				</property>
 			</bean>

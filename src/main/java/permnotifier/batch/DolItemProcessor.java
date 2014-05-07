@@ -16,10 +16,10 @@ import org.jsoup.nodes.Document;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import permnotifier.domain.DolItem;
+import permnotifier.domain.PermRecord;
 import permnotifier.repositories.DolItemRepository;
 
-public class DolItemProcessor implements ItemProcessor<DolItem, DolItem>{
+public class DolItemProcessor implements ItemProcessor<PermRecord, PermRecord>{
 
 	private static final String DETAILS_URL = "https://icert.doleta.gov/index.cfm?event=ehLCJRExternal.dspCert&doc_id=3&visa_class_id=6&id={0}";
 	private static Pattern AMOUNT_PATTERN = Pattern.compile("(\\$[\\d,\\.]*)");
@@ -28,9 +28,9 @@ public class DolItemProcessor implements ItemProcessor<DolItem, DolItem>{
 	DolItemRepository dolItemRepository;
 	
 	@Override
-	public DolItem process(DolItem item) throws Exception {
+	public PermRecord process(PermRecord item) throws Exception {
 		
-		DolItem existingItem = dolItemRepository.findByCaseId(item.getCaseId());
+		PermRecord existingItem = dolItemRepository.findByCaseId(item.getCaseId());
 		if(existingItem != null) {
 			// if item already exists, then don't process it
 			return null;

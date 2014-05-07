@@ -12,6 +12,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import permnotifier.domain.AbstractModel;
+import permnotifier.domain.WorkInformation;
 
 import com.google.common.base.Function;
 
@@ -34,14 +35,14 @@ public class SolrService {
         return new QueryResponse();
     }
 
-	public <T extends AbstractModel> void indexItem(T item, Function<T, SolrInputDocument> function) {
+	public <T extends AbstractModel & WorkInformation> void indexItem(T item, Function<T, SolrInputDocument> function) {
         List<T> lists = new ArrayList<>();
         lists.add(item);
         indexItems(lists, function);
     }
 
 	@Async
-    public <T extends AbstractModel> void indexItems(Iterable<T> items, Function<T, SolrInputDocument> function) {
+    public <T extends AbstractModel & WorkInformation> void indexItems(Iterable<T> items, Function<T, SolrInputDocument> function) {
         if (items == null || !items.iterator().hasNext()) {
         	// no item to process
         	return;

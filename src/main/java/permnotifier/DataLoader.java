@@ -15,7 +15,7 @@ public class DataLoader {
         Job job = context.getBean("initialDataJob", Job.class);
     	
     	JobParametersBuilder builder = new JobParametersBuilder();
-//        builder.addDate("startDate", startDateTime.toDate());
+        builder.addLong("ts", System.currentTimeMillis());
         JobExecution jobExecution = jobLauncher.run(job,
                 builder.toJobParameters());
     }
