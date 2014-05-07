@@ -17,7 +17,7 @@ import org.springframework.batch.item.ItemProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import permnotifier.domain.PermRecord;
-import permnotifier.repositories.DolItemRepository;
+import permnotifier.repositories.PermRecordRepository;
 
 public class DolItemProcessor implements ItemProcessor<PermRecord, PermRecord>{
 
@@ -25,7 +25,7 @@ public class DolItemProcessor implements ItemProcessor<PermRecord, PermRecord>{
 	private static Pattern AMOUNT_PATTERN = Pattern.compile("(\\$[\\d,\\.]*)");
 	
 	@Autowired
-	DolItemRepository dolItemRepository;
+	PermRecordRepository dolItemRepository;
 	
 	@Override
 	public PermRecord process(PermRecord item) throws Exception {

@@ -32,7 +32,6 @@ public class SalaryCalculator {
 	}
 	
 	public static BigDecimal getHourlySalary(SalaryType baseSalaryType, BigDecimal baseSalary) {
-		System.out.println(baseSalary);
 		switch (baseSalaryType) {
 			case HOURLY:
 				return baseSalary;

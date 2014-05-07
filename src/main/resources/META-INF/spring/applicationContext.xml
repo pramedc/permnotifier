@@ -76,16 +76,26 @@
 		<batch:step id="fetchData">
 			<batch:tasklet transaction-manager="transactionManager">
 				<batch:chunk reader="reader" processor="processor"
-					writer="writer" commit-interval="20" />
+					writer="permWriter" commit-interval="20" />
 			</batch:tasklet>
 		</batch:step>
 	</batch:job>
 
 	<batch:job id="initialDataJob">
-		<batch:step id="initializeDataStep">
+		<batch:step id="loadPermData" next="loadLCAData">
 			<batch:tasklet transaction-manager="transactionManager">
-				<batch:chunk reader="multiResourceReader"
-					writer="writer" commit-interval="100" />
+				<batch:chunk reader="permResourceReader"
+					writer="permWriter" commit-interval="100" />
+					<batch:no-rollback-exception-classes>
+						<batch:include class="org.springframework.orm.jpa.JpaSystemException"/>
+						<batch:include class="org.hibernate.exception.ConstraintViolationException"/>
+					</batch:no-rollback-exception-classes>
+			</batch:tasklet>
+		</batch:step>
+		<batch:step id="loadLCAData">
+			<batch:tasklet transaction-manager="transactionManager">
+				<batch:chunk reader="lcaResourceReader"
+					writer="lcaWriter" commit-interval="100" />
 					<batch:no-rollback-exception-classes>
 						<batch:include class="org.springframework.orm.jpa.JpaSystemException"/>
 						<batch:include class="org.hibernate.exception.ConstraintViolationException"/>
@@ -94,13 +104,14 @@
 		</batch:step>
 	</batch:job>
 
+	<!-- perm record initialization beans-->
 	<bean id="permRecord" class="permnotifier.domain.PermRecord" scope="prototype" />
-	<bean id="multiResourceReader"
+	<bean id="permResourceReader"
 		class="org.springframework.batch.item.file.MultiResourceItemReader">
-		<property name="resources" value="classpath:initialdata/*.csv" />
-		<property name="delegate" ref="flatFileReader" />
+		<property name="resources" value="classpath:initialdata/PERM*.csv" />
+		<property name="delegate" ref="permFlatFileReader" />
 	</bean>
-	<bean id="flatFileReader" class="org.springframework.batch.item.file.FlatFileItemReader"
+	<bean id="permFlatFileReader" class="org.springframework.batch.item.file.FlatFileItemReader"
 		scope="step">
 		<property name="linesToSkip" value="1" />
 		<property name="lineMapper">
@@ -120,9 +131,43 @@
 			</bean>
 		</property>
 	</bean>
-
+	<bean id="permRecordSavingStrategy" class="permnotifier.batch.strategy.impl.PermRecordSavingStrategy" />
+	<bean id="permWriter" class="permnotifier.batch.DolItemWriter">
+		<property name="recordSavingStrategy" ref="permRecordSavingStrategy" />
+	</bean>
+	
+	<!-- lca record initialization beans-->
+	<bean id="lcaRecord" class="permnotifier.domain.LCARecord" scope="prototype" />
+	<bean id="lcaResourceReader"
+		class="org.springframework.batch.item.file.MultiResourceItemReader">
+		<property name="resources" value="classpath:initialdata/LCA*.csv" />
+		<property name="delegate" ref="lcaFlatFileReader" />
+	</bean>
+	<bean id="lcaFlatFileReader" class="org.springframework.batch.item.file.FlatFileItemReader"
+		scope="step">
+		<property name="linesToSkip" value="1" />
+		<property name="lineMapper">
+			<bean class="org.springframework.batch.item.file.mapping.DefaultLineMapper">
+				<property name="lineTokenizer">
+					<bean
+						class="org.springframework.batch.item.file.transform.DelimitedLineTokenizer">
+						<property name="names" value="caseNumber,status,caseSubmission,caseDecision,employmentStart,employer,employerCity,employerState,jobTitle,offerLow,offerHigh,offerSalaryType,workLocationCity,workLocationState" />
+					</bean>
+				</property>
+				<property name="fieldSetMapper">
+					<bean class="permnotifier.batch.LCAFieldSetMapper">
+					</bean>
+				</property>
+			</bean>
+		</property>
+	</bean>
+	<bean id="lcaRecordSavingStrategy" class="permnotifier.batch.strategy.impl.LCARecordSavingStrategy" />
+	<bean id="lcaWriter" class="permnotifier.batch.DolItemWriter">
+		<property name="recordSavingStrategy" ref="lcaRecordSavingStrategy" />
+	</bean>
+	
+	<!-- batch beans -->
 	<bean id="processor" class="permnotifier.batch.DolItemProcessor"></bean>
-	<bean id="writer" class="permnotifier.batch.DolItemWriter"></bean>
 	<bean id="reader" class="permnotifier.batch.DolItemReader" scope="step">
 		<property name="pageSize" value="20" />
 	</bean>

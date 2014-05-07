@@ -148,7 +148,7 @@ public class PermRecord extends AbstractModel implements WorkInformation {
 	}
 
 	public String getJobTitle() {
-		return jobTitle != null ? jobTitle : occupationTitle;
+		return StringUtils.upperCase(StringUtils.trimToEmpty(jobTitle != null ? jobTitle : occupationTitle));
 	}
 
 	public void setJobTitle(String jobTitle) {
@@ -259,7 +259,7 @@ public class PermRecord extends AbstractModel implements WorkInformation {
 	
 	@Override
 	public String getJobLevel() {
-		return occupationLevel;
+		return StringUtils.upperCase(StringUtils.trimToEmpty(occupationLevel));
 	}
 
 	@Override

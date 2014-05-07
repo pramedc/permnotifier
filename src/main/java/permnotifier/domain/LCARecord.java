@@ -27,6 +27,12 @@ public class LCARecord extends AbstractModel implements WorkInformation {
 	@Temporal(TemporalType.DATE)
 	private Date caseSubmision;
 
+	@Temporal(TemporalType.DATE)
+	private Date caseDecision;
+	
+	@Temporal(TemporalType.DATE)
+	private Date employmentStart;
+	
 	private String employer;
 
 	private String employerCity;
@@ -67,6 +73,22 @@ public class LCARecord extends AbstractModel implements WorkInformation {
 
 	public void setCaseSubmision(Date caseSubmision) {
 		this.caseSubmision = caseSubmision;
+	}
+
+	public Date getCaseDecision() {
+		return caseDecision;
+	}
+
+	public void setCaseDecision(Date caseDecision) {
+		this.caseDecision = caseDecision;
+	}
+
+	public Date getEmploymentStart() {
+		return employmentStart;
+	}
+
+	public void setEmploymentStart(Date employmentStart) {
+		this.employmentStart = employmentStart;
 	}
 
 	public String getEmployer() {
@@ -112,7 +134,7 @@ public class LCARecord extends AbstractModel implements WorkInformation {
 	}
 
 	public String getJobTitle() {
-		return jobTitle;
+		return StringUtils.upperCase(StringUtils.trimToNull(jobTitle));
 	}
 
 	public void setJobTitle(String jobTitle) {
@@ -175,7 +197,7 @@ public class LCARecord extends AbstractModel implements WorkInformation {
 
 	@Override
 	public Date getJobPostDate() {
-		return getCaseSubmision();
+		return caseDecision != null ? caseDecision : caseSubmision;
 	}
 
 	@Override
