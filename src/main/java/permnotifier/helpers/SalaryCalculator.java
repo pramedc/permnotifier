@@ -32,7 +32,7 @@ public class SalaryCalculator {
 	}
 	
 	public static BigDecimal getHourlySalary(SalaryType baseSalaryType, BigDecimal baseSalary) {
-		if(baseSalaryType == SalaryType.HOURLY) return baseSalary;
+		System.out.println(baseSalary);
 		switch (baseSalaryType) {
 			case HOURLY:
 				return baseSalary;
@@ -43,9 +43,9 @@ public class SalaryCalculator {
 			case MONTHLY:
 				return baseSalary.multiply(MONTH_IN_A_YEAR).divide(WEEK_IN_A_YEAR, RoundingMode.CEILING).divide(HOUR_IN_A_WEEK, RoundingMode.CEILING);
 			case ANNUALY:
-				return baseSalary.divide(WEEK_IN_A_YEAR).divide(HOUR_IN_A_WEEK);
+				return baseSalary.divide(WEEK_IN_A_YEAR, RoundingMode.CEILING).divide(HOUR_IN_A_WEEK, RoundingMode.CEILING);
 		}
 		throw new IllegalArgumentException("salaryType is null");
 	}
-	
+
 }
