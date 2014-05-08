@@ -4,7 +4,7 @@ import org.hibernate.validator.constraints.NotBlank;
 
 public class SearchParameters {
 
-	@NotBlank(message = "case number must not be blank!")
+	@NotBlank(message = "search term must not be blank!")
 	private String searchTerm;
 	
 	private String city;

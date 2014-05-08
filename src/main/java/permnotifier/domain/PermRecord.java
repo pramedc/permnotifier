@@ -265,17 +265,17 @@ public class PermRecord extends AbstractModel implements WorkInformation {
 
 	@Override
 	public Date getJobPostDate() {
-		return workStartDate;
+		return workStartDate != null ? workStartDate : jobPostingDate;
 	}
 
 	@Override
 	public String getJobPostMonth() {
-		return DateHelper.getMonth(workStartDate);
+		return DateHelper.getMonth(getJobPostDate());
 	}
 	
 	@Override
 	public String getJobPostYear() {
-		return DateHelper.getYear(workStartDate);
+		return DateHelper.getYear(getJobPostDate());
 	}
 	
 	@Override
