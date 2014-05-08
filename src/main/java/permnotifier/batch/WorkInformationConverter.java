@@ -1,5 +1,6 @@
 package permnotifier.batch;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.solr.common.SolrInputDocument;
 
 import permnotifier.domain.WorkInformation;
@@ -16,17 +17,20 @@ final class WorkInformationConverter<T extends WorkInformation> implements
 	@Override
 	public SolrInputDocument apply(T input) {
 		SolrInputDocument document = new SolrInputDocument();
-		document.addField("employer_s", input.getEmployer());
-		document.addField("city_s", input.getCity());
-		document.addField("state_s", input.getState());
+		document.addField("employer_s", StringUtils.upperCase(input.getEmployer()));
+		document.addField("city_s", StringUtils.upperCase(input.getCity()));
+		document.addField("state_s", StringUtils.upperCase(input.getState()));
 		document.addField("jobPostingDate_dt", input.getJobPostDate());
-		document.addField("jobTitle_s", input.getJobTitle());
+		document.addField("jobPostMonth_s", input.getJobPostMonth());
+		document.addField("jobPostYear_s", input.getJobPostYear());
+		document.addField("jobTitle_s", StringUtils.upperCase(input.getJobTitle()));
 		document.addField("yearlySalary_c", input.getYearlySalary());
 		document.addField("monthlySalary_c", input.getMonthlySalary());
 		document.addField("biweeklySalary_c", input.getBiWeeklySalary());
 		document.addField("weeklySalary_c", input.getWeeklySalary());
 		document.addField("hourlySalary_c", input.getHourlySalary());
-		document.addField("jobLevel_s", input.getJobLevel());
+		document.addField("jobLevel_s", StringUtils.upperCase(input.getJobLevel()));
+		document.addField("searchField_s", StringUtils.upperCase(input.getJobTitle()) + " " + StringUtils.upperCase(input.getEmployer()));
 		return document;
 	}
 	

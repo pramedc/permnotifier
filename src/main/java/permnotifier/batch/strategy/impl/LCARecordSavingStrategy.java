@@ -23,4 +23,8 @@ public class LCARecordSavingStrategy implements DOLRecordSavingStrategy<LCARecor
 		repository.save(obj);
 	}
 
+	@Override
+	public void saveAll(Iterable<LCARecord> objs) {
+		repository.save(objs);
+	}
 }

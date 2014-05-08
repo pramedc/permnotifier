@@ -1,5 +1,6 @@
 package permnotifier;
-import org.apache.commons.lang3.StringUtils;
+import java.util.Date;
+
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobExecution;
 import org.springframework.batch.core.JobParametersBuilder;
@@ -17,8 +18,11 @@ public class DataLoader {
     	
     	JobParametersBuilder builder = new JobParametersBuilder();
         builder.addLong("ts", System.currentTimeMillis());
+        
+        System.out.println(new Date());
         JobExecution jobExecution = jobLauncher.run(job,
                 builder.toJobParameters());
+        System.out.println(new Date());
     	
     }
 

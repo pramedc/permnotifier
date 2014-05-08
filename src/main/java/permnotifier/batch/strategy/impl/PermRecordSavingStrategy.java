@@ -22,5 +22,10 @@ public class PermRecordSavingStrategy implements DOLRecordSavingStrategy<PermRec
 	public void save(PermRecord obj) {
 		repository.save(obj);
 	}
+	
+	@Override
+	public void saveAll(Iterable<PermRecord> objs) {
+		repository.save(objs);
+	}
 
 }

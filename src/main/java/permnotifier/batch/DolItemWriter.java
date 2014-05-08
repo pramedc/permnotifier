@@ -29,10 +29,11 @@ public class DolItemWriter<T extends AbstractModel & WorkInformation> implements
 		try {
 			for (T obj : nonNullList) {
 				if(recordSavingStrategy.canSave(obj)) {
-					recordSavingStrategy.save(obj);
+//					recordSavingStrategy.save(obj);
 					permRecords.add(obj);
 				}
 			}
+			recordSavingStrategy.saveAll(permRecords);
 		}
 		catch(Exception e2) {
 			// ignore

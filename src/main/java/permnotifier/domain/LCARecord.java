@@ -11,6 +11,7 @@ import javax.persistence.TemporalType;
 
 import org.apache.commons.lang3.StringUtils;
 
+import permnotifier.helpers.DateHelper;
 import permnotifier.helpers.SalaryCalculator;
 
 @Entity
@@ -92,7 +93,7 @@ public class LCARecord extends AbstractModel implements WorkInformation {
 	}
 
 	public String getEmployer() {
-		return employer;
+		return StringUtils.upperCase(employer);
 	}
 
 	public void setEmployer(String employer) {
@@ -200,6 +201,16 @@ public class LCARecord extends AbstractModel implements WorkInformation {
 		return caseDecision != null ? caseDecision : caseSubmision;
 	}
 
+	@Override
+	public String getJobPostMonth() {
+		return DateHelper.getMonth(getJobPostDate());
+	}
+	
+	@Override
+	public String getJobPostYear() {
+		return DateHelper.getYear(getJobPostDate());
+	}
+	
 	@Override
 	public BigDecimal getYearlySalary() {
 		return isValid() ? SalaryCalculator.getYearlySalary(getSalaryType(), getPossibleOffer()) : null;

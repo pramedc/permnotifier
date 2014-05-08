@@ -1,12 +1,11 @@
 package permnotifier.domain;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
-public interface WorkInformation {
+public interface WorkInformation extends Serializable {
 
-	Long getId();
-	
 	String getEmployer();
 	
 	String getCity();
@@ -19,6 +18,10 @@ public interface WorkInformation {
 	
 	Date getJobPostDate();
 	
+	String getJobPostMonth();
+
+	String getJobPostYear();
+
 	BigDecimal getYearlySalary();
 	
 	BigDecimal getMonthlySalary();

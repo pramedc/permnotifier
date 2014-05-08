@@ -13,6 +13,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import permnotifier.helpers.DateHelper;
 import permnotifier.helpers.SalaryCalculator;
 
 @Entity
@@ -116,7 +117,7 @@ public class PermRecord extends AbstractModel implements WorkInformation {
 	}
 
 	public String getEmployer() {
-		return employer;
+		return StringUtils.upperCase(employer);
 	}
 
 	public void setEmployer(String employer) {
@@ -267,6 +268,16 @@ public class PermRecord extends AbstractModel implements WorkInformation {
 		return workStartDate;
 	}
 
+	@Override
+	public String getJobPostMonth() {
+		return DateHelper.getMonth(workStartDate);
+	}
+	
+	@Override
+	public String getJobPostYear() {
+		return DateHelper.getYear(workStartDate);
+	}
+	
 	@Override
 	public BigDecimal getYearlySalary() {
 		return isValid() ? SalaryCalculator.getYearlySalary(getSalaryType(), getPossibleOffer()) : null;

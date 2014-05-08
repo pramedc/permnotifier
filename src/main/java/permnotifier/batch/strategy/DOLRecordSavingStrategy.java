@@ -9,4 +9,6 @@ public interface DOLRecordSavingStrategy<T extends AbstractModel & WorkInformati
 	
 	void save(T obj);
 	
+	void saveAll(Iterable<T> objs);
+	
 }

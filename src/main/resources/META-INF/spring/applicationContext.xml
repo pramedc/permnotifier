@@ -82,20 +82,20 @@
 	</batch:job>
 
 	<batch:job id="initialDataJob">
-		<batch:step id="loadPermData" next="loadLCAData">
+		<!-- <batch:step id="loadPermData" next="loadLCAData">
 			<batch:tasklet transaction-manager="transactionManager">
 				<batch:chunk reader="permResourceReader"
-					writer="permWriter" commit-interval="100" />
+					writer="permWriter" commit-interval="200" />
 					<batch:no-rollback-exception-classes>
 						<batch:include class="org.springframework.orm.jpa.JpaSystemException"/>
 						<batch:include class="org.hibernate.exception.ConstraintViolationException"/>
 					</batch:no-rollback-exception-classes>
 			</batch:tasklet>
-		</batch:step>
+		</batch:step> -->
 		<batch:step id="loadLCAData">
 			<batch:tasklet transaction-manager="transactionManager">
 				<batch:chunk reader="lcaResourceReader"
-					writer="lcaWriter" commit-interval="100" />
+					writer="lcaWriter" commit-interval="200" />
 					<batch:no-rollback-exception-classes>
 						<batch:include class="org.springframework.orm.jpa.JpaSystemException"/>
 						<batch:include class="org.hibernate.exception.ConstraintViolationException"/>
