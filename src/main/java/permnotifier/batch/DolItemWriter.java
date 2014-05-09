@@ -29,17 +29,19 @@ public class DolItemWriter<T extends AbstractModel & WorkInformation> implements
 		Set<T> permRecords = new TreeSet<>(recordSavingStrategy.getEqualityComparator());
 		try {
 			for (T obj : nonNullList) {
-				if(!permRecords.contains(obj) && recordSavingStrategy.canSave(obj)) {
-					recordSavingStrategy.save(obj);
+//				System.out.println(obj.isValid() + "=" + obj);
+				if(!permRecords.contains(obj) && obj.isValid() && recordSavingStrategy.canSave(obj)) {
+//					recordSavingStrategy.save(obj);
 					permRecords.add(obj);
 				}
 			}
-//			recordSavingStrategy.saveAll(permRecords);
+			recordSavingStrategy.saveAll(permRecords);
 		}
 		catch(Exception e2) {
 			// ignore
 		}
 		
+//		System.out.println(permRecords);
 		solrService.indexItems(permRecords, WorkInformationConverter.<T>newInstance());
 	}
 

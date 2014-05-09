@@ -82,7 +82,7 @@
 	</batch:job>
 
 	<batch:job id="initialDataJob">
-		<batch:step id="loadPermData" next="loadLCAData">
+		<!-- <batch:step id="loadPermData" next="loadLCAData">
 			<batch:tasklet transaction-manager="transactionManager">
 				<batch:chunk reader="permResourceReader"
 					writer="permWriter" commit-interval="200" />
@@ -91,7 +91,7 @@
 						<batch:include class="org.hibernate.exception.ConstraintViolationException"/>
 					</batch:no-rollback-exception-classes>
 			</batch:tasklet>
-		</batch:step>
+		</batch:step> -->
 		<batch:step id="loadLCAData">
 			<batch:tasklet transaction-manager="transactionManager">
 				<batch:chunk reader="lcaResourceReader"

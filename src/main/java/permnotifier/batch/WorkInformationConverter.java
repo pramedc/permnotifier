@@ -30,7 +30,10 @@ final class WorkInformationConverter<T extends WorkInformation> implements
 		document.addField("weeklySalary_c", input.getWeeklySalary());
 		document.addField("hourlySalary_c", input.getHourlySalary());
 		document.addField("jobLevel_s", StringUtils.upperCase(input.getJobLevel()));
-		document.addField("searchField_s", StringUtils.upperCase(input.getJobTitle()) + " " + StringUtils.upperCase(input.getEmployer()));
+		document.addField("type_s", StringUtils.upperCase(input.getType()));
+		document.addField("typeIdentifier_s", StringUtils.upperCase(input.getTypeIdentifier()));
+		document.addField("questionable_b", input.getHourlySalary().doubleValue() > 500);
+		document.addField("searchField_s", StringUtils.upperCase(input.getTypeIdentifier()) + "," + StringUtils.upperCase(input.getJobTitle()) + "," + StringUtils.upperCase(input.getEmployer()));
 		return document;
 	}
 	

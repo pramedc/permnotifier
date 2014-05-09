@@ -28,7 +28,11 @@ public class SearchController {
     		System.out.println("pageable is null");
     		pageable = new PageRequest(0, 10);
     	}
+    	
+    	long startTime = System.currentTimeMillis();
     	QueryResponse response = service.search(parameters, pageable);
-    	return SearchResult.create(response);
+    	final SearchResult result = SearchResult.create(response);
+		result.setMs(System.currentTimeMillis() - startTime);
+    	return result;
     }
 }

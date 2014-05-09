@@ -28,9 +28,6 @@ public class PermRecord extends AbstractModel implements WorkInformation {
 	@Column(name = "case_number", unique = true)
 	private String caseNumber;
 
-	@Column(name = "case_type")
-	private String caseType;
-	
 	@Column(name = "status")
 	private String status;
 	
@@ -98,14 +95,6 @@ public class PermRecord extends AbstractModel implements WorkInformation {
 
 	public void setCaseNumber(String caseNumber) {
 		this.caseNumber = caseNumber;
-	}
-
-	public String getCaseType() {
-		return caseType;
-	}
-
-	public void setCaseType(String caseType) {
-		this.caseType = caseType;
 	}
 
 	public String getStatus() {

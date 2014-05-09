@@ -1,10 +1,8 @@
 package permnotifier.controllers.api.params;
 
-import org.hibernate.validator.constraints.NotBlank;
 
 public class SearchParameters {
 
-	@NotBlank(message = "search term must not be blank!")
 	private String searchTerm;
 	private String employer;
 
@@ -13,6 +11,8 @@ public class SearchParameters {
 	
 	private String year;
 	private String month;
+	
+	private String jobTitle;
 
 	public String getSearchTerm() {
 		return searchTerm;
@@ -62,4 +62,12 @@ public class SearchParameters {
 		this.month = month;
 	}
 
+	public String getJobTitle() {
+		return jobTitle;
+	}
+
+	public void setJobTitle(String jobTitle) {
+		this.jobTitle = jobTitle;
+	}
+	
 }

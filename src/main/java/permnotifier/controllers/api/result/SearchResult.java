@@ -17,6 +17,9 @@ public class SearchResult {
 	private long start;
 	private List<FacetList> facets = new ArrayList<FacetList>(); 
 	
+	// property to store time on how fast the query was executed
+	private long ms;
+	
 	public static SearchResult create(QueryResponse response) {
 		SearchResult result = new SearchResult();
 		result.results = response.getBeans(WorkInformationRecord.class);
@@ -40,6 +43,14 @@ public class SearchResult {
 		return result;
 	}
 	
+	public long getMs() {
+		return ms;
+	}
+
+	public void setMs(long ms) {
+		this.ms = ms;
+	}
+
 	public List<WorkInformationRecord> getResults() {
 		return results;
 	}
