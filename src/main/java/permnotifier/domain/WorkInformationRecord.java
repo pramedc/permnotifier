@@ -29,10 +29,10 @@ public class WorkInformationRecord {
 	@Field("jobPostDate_dt")
 	private Date jobPostDate;
 	
-//	@Field("jobPostMonth_s")
+	@Field("jobPostMonth_s")
 	private String jobPostMonth;
 	
-//	@Field("jobPostYear_s")
+	@Field("jobPostYear_s")
 	private String jobPostYear;
 	
 	private BigDecimal yearlySalary;

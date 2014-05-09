@@ -1,8 +1,9 @@
 package permnotifier.batch;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,15 +26,15 @@ public class DolItemWriter<T extends AbstractModel & WorkInformation> implements
 	@Override
 	public void write(List<? extends T> items) throws Exception {
 		Collection<T> nonNullList = Lists.newArrayList(Collections2.filter(items, Predicates.notNull()));
-		List<T> permRecords = new ArrayList<>();
+		Set<T> permRecords = new TreeSet<>(recordSavingStrategy.getEqualityComparator());
 		try {
 			for (T obj : nonNullList) {
-				if(recordSavingStrategy.canSave(obj)) {
-//					recordSavingStrategy.save(obj);
+				if(!permRecords.contains(obj) && recordSavingStrategy.canSave(obj)) {
+					recordSavingStrategy.save(obj);
 					permRecords.add(obj);
 				}
 			}
-			recordSavingStrategy.saveAll(permRecords);
+//			recordSavingStrategy.saveAll(permRecords);
 		}
 		catch(Exception e2) {
 			// ignore

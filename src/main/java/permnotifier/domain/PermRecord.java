@@ -310,6 +310,16 @@ public class PermRecord extends AbstractModel implements WorkInformation {
 				&& getJobTitle() != null;
 	}
 
+	@Override
+	public String getType() {
+		return "PERM";
+	}
+	
+	@Override
+	public String getTypeIdentifier() {
+		return caseNumber;
+	}
+	
 	public String toString() {
 		return ReflectionToStringBuilder.toString(this,
 				ToStringStyle.SHORT_PREFIX_STYLE);

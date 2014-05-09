@@ -1,5 +1,7 @@
 package permnotifier.batch.strategy.impl;
 
+import java.util.Comparator;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,4 +30,13 @@ public class PermRecordSavingStrategy implements DOLRecordSavingStrategy<PermRec
 		repository.save(objs);
 	}
 
+	@Override
+	public Comparator<PermRecord> getEqualityComparator() {
+		return new Comparator<PermRecord>() {
+			@Override
+			public int compare(PermRecord o1, PermRecord o2) {
+				return o1.getCaseNumber().compareTo(o2.getCaseNumber());
+			}
+		};
+	}
 }

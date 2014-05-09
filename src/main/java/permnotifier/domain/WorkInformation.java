@@ -6,6 +6,10 @@ import java.util.Date;
 
 public interface WorkInformation extends Serializable {
 
+	String getType();
+	
+	String getTypeIdentifier();
+	
 	String getEmployer();
 	
 	String getCity();

@@ -242,5 +242,15 @@ public class LCARecord extends AbstractModel implements WorkInformation {
 				&& getCity() != null && getState() != null && getEmployer() != null
 				&& getJobTitle() != null;
 	}
+	
+	@Override
+	public String getType() {
+		return "LCA";
+	}
+	
+	@Override
+	public String getTypeIdentifier() {
+		return caseNumber;
+	}
 
 }

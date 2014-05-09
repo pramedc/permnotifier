@@ -1,5 +1,7 @@
 package permnotifier.batch.strategy.impl;
 
+import java.util.Comparator;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,5 +28,15 @@ public class LCARecordSavingStrategy implements DOLRecordSavingStrategy<LCARecor
 	@Override
 	public void saveAll(Iterable<LCARecord> objs) {
 		repository.save(objs);
+	}
+	
+	@Override
+	public Comparator<LCARecord> getEqualityComparator() {
+		return new Comparator<LCARecord>() {
+			@Override
+			public int compare(LCARecord o1, LCARecord o2) {
+				return o1.getCaseNumber().compareTo(o2.getCaseNumber());
+			}
+		};
 	}
 }
